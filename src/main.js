@@ -41,9 +41,9 @@ class Main extends React.Component {
       // query params
       searchQuery,
       // assistant data
-      context,
-      userInput,
-      conversation
+      // context,
+      // userInput,
+      // conversation
     } = this.props;
 
     // change in state fires re-render of components
