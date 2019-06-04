@@ -1,0 +1,72 @@
+{
+  "name": "watson-discovery-sdu-with-assistant",
+  "version": "1.0.0",
+  "private": true,
+  "main": "app.js",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/IBM/watson-discovery-sdu-with-assistant.git"
+  },
+  "scripts": {
+    "start": "node app.js",
+    "bootstrap": "cp env.sample .env",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "dependencies": {
+    "@babel/cli": "^7.2.0",
+    "@babel/core": "^7.2.0",
+    "@babel/preset-env": "^7.2.0",
+    "@babel/preset-react": "^7.0.0",
+    "@babel/register": "^7.0.0",
+    "@livechat/ui-kit": "^0.4.0-1",
+    "@material-ui/core": "^3.9.3",
+    "@material-ui/icons": "^3.0.2",
+    "babel-core": "^7.0.0-bridge.0",
+    "babel-jest": "^24.5.0",
+    "babel-loader": "^8.0.5",
+    "babelify": "^10.0.0",
+    "bluebird": "^3.5.3",
+    "body-parser": "^1.18.3",
+    "chart.js": "^2.7.3",
+    "dotenv": "^6.2.0",
+    "express": "^4.16.4",
+    "express-browserify": "^1.0.3",
+    "express-react-views": "^0.11.0",
+    "extend": ">=2.0.2",
+    "ibm-watson": "^4.1.0",
+    "isomorphic-fetch": "^2.2.1",
+    "prop-types": "^15.6.2",
+    "query-string": "^6.2.0",
+    "react": "^16.6.3",
+    "react-bootstrap": "^1.0.0-beta.6",
+    "react-dom": "^16.6.3",
+    "react-livechat": "^1.1.1",
+    "react-simple-chatbot": "^0.5.3",
+    "semantic-ui-react": "^0.86.0",
+    "sort-by": "^1.2.0",
+    "styled-components": "^4.2.0",
+    "uglifyify": "5.0.1"
+  },
+  "babel": {
+    "presets": [
+      "@babel/env",
+      "@babel/react"
+    ],
+    "ignore": [
+      "node_modules"
+    ]
+  },
+  "devDependencies": {
+    "eslint": "^4.13.1",
+    "eslint-config-standard": "^11.0.0-beta.0",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-node": "^5.2.1",
+    "eslint-plugin-promise": "^3.6.0",
+    "eslint-plugin-react": "^7.5.1",
+    "eslint-plugin-standard": "^3.0.1",
+    "nodemon": "^1.18.9",
+    "react-test-renderer": "^16.6.3"
+  }
+}
