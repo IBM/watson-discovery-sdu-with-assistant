@@ -160,7 +160,7 @@ Create a new intent that can detect when the user is asking about operating the 
 
 From the `Customer Care Sample Skill` panel, select the `Intents` tab.
 
-Name the intent "#Product_Information", and at a minimum, enter the following example questions to be associated with it.
+Name the intent `#Product_Information`, and at a minimum, enter the following example questions to be associated with it.
 
 ![](doc/source/images/create-assistant-intent.png)
 
