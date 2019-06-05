@@ -31,8 +31,8 @@ In our example, the webhook will communicate with an IBM Cloud Functions action,
 
 ![architecture](doc/source/images/architecture.png)
 
-1. The document is annotated using Watson Discovery SDDU
-1. The user interacts with the backend server via the app UI. The fronend app UI is a chatbot to allows the user to ask questions.
+1. The document is annotated using Watson Discovery SDU
+1. The user interacts with the backend server via the app UI. The frontend app UI is a chatbot that engages the user in a conversation.
 1. Dialog between the user and backend server is coordinated using a Watson Assistant dialog skill.
 1. If the user asks a product operation question, a search query is passed to a predefined IBM Cloud Functions action.
 1. The Cloud Functions action will query the Watson Discovery service and return the results.
@@ -42,7 +42,7 @@ In our example, the webhook will communicate with an IBM Cloud Functions action,
 1. [Clone the repo](#1-clone-the-repo)
 1. [Create IBM Cloud services](#2-create-ibm-cloud-services)
 1. [Configure Watson Discovery](#3-configure-watson-discovery)
-1. [Create Cloud Functions action](#4-create-cloud-functions-action)
+1. [Create IBM Cloud Functions action](#4-create-ibm-cloud-functions-action)
 1. [Configure Watson Assistant](#5-configure-watson-assistant)
 1. [Get IBM Cloud services credentials and add to .env file](#6-get-ibm-cloud-services-credentials-and-add-to-env-file)
 1. [Run the application](#7-run-the-application)
@@ -64,11 +64,11 @@ Create the following services:
 
 #### Import the document
 
-As shown in the video below, launch the **Watson Discovery** tool and create a **new data collection** by selecting the **Upload your own data** option. Give the data collection a unique name. When prompted, select and upload the `ecobee users manual` located in your local `data` directory.
+As shown in the video below, launch the **Watson Discovery** tool and create a **new data collection** by selecting the **Upload your own data** option. Give the data collection a unique name. When prompted, select and upload the `ecobee3_UserGuide.pdf` file located in your local `data` directory.
 
 ![upload_data_into_collection](doc/source/images/upload-disco-file-for-sdu.gif)
 
-The `Ecobee` is a popular residential thermostat that has a wifi interface and a lot of configuration options.
+The `Ecobee` is a popular residential thermostat that has a wifi interface and multiple configuration options.
 
 #### Annotate with SDU
 
@@ -78,17 +78,19 @@ ADD VIDEO ....
 
 #### Store credentials for future use
 
-In upcoming steps, you will need to provide the credentials to access your Discovery collection. The values will come from two locations.
+In upcoming steps, you will need to provide the credentials to access your Discovery collection. The values can be found in the following locations.
 
-The `Collection ID` [1] and `Environment ID` [2] values can be found by clicking the dropdown button located at the top right side of your collection panel:
+The `Collection ID` and `Environment ID` values can be found by clicking the dropdown button [1] located at the top right side of your collection panel:
 
 ![](doc/source/images/get-collection-creds.png)
 
-You will also need your `iam_apikey` [3] and `URL` endpoint [4] for your service. These can be accessed by selecting the `Service credentials` [1] tab on the main panel for your Discovery service, then selecting the `View credentials`[2] drop-down menu:
+Return to the main panel of your Discovery service, and click the `Service credentials` [1] tab:
 
 ![](doc/source/images/disco-creds.png)
 
-### 4. Create Cloud Functions action
+Click the `View credentials` [2] drop-down menu to view the `iam_apikey` [3] and `URL` endpoint [4] for your service.
+
+### 4. Create IBM Cloud Functions action
 
 Start the `Cloud Functions` service by selecting `Create Resource` from the IBM Cloud dashboard. Enter `functions` as the filter [1], then select the `Functions` card [2]:
 
@@ -98,17 +100,23 @@ From the `Functions` main panel, click on the `Actions` tab. Then click on `Crea
 
 From the `Create` panel, select the `Create Action` option.
 
+On the `Create Action` panel, provide a unique `Action Name` [1], keep the default package [2], and select the `Node.js 10` [3] runtime. Click `Create` [4] to create the action.
+
 ![](doc/source/images/action-create.png)
 
-Provide a unique `Action Name` [1], keep the default package [2], and select the `Node.js 10` [3] runtime. Click `Create` [4] to create the action.
-
-On the `Code` panel [1], cut and paste in the code from `/actions/disco-action.js` [2].
+Once your action is created, click on the `Code` tab [1]:
 
 ![](doc/source/images/action-code.png)
 
+In the code editor window [2], cut and paste in the code from the `disco-action.js` file found in the `/actions` directory of your local repo.
+
 If you press the `Invoke` button [3], it will fail due to credentials not being defined yet.
 
-Next, select the `Parameters` tab [1] and enter the following key values:
+Next, select the `Parameters` tab [1]:
+
+![](doc/source/images/action-params.png)
+
+Add the following keys:
 
 * url
 * environment_id
@@ -122,11 +130,11 @@ For values, please use the values associated with the Discovery service you crea
 
 For the `input` value [2], use a default question such as "how do I turn on the heater?". 
 
-![](doc/source/images/action-params.png)
-
-Next, select the `Endpoints` tab [1]. Take note of the REST API endpoint value [2], as this will be needed in a future step:
+Next, go to the `Endpoints` panel [1]:
 
 ![](doc/source/images/action-endpoint.png)
+
+Take note of the REST API endpoint value [2], as this will be needed in a future step.
 
 To verify you have entered the correct Discovery parameters, execute the provied `curl` command [3]. If it fails, re-check your parameter values.
 
@@ -144,7 +152,7 @@ As shown in the video below, launch the **Watson Assistant** tool and create a n
 
 ![upload_data_into_collection](doc/source/images/create-skill.gif)
 
-This dialog skill contains all of the nodes needed to have a typical conversation with a user.
+This dialog skill contains all of the nodes needed to have a typical call center conversation with a user.
 
 #### Add new intent
 
@@ -152,13 +160,13 @@ Create a new intent that can detect when the user is asking about operating the 
 
 From the `Customer Care Sample Skill` panel, select the `Intents` tab.
 
-At a minimum, add the following intents as examples of questions a user might typically ask.
+Name the intent `#Product_Information`, and at a minimum, enter the following example questions to be associated with it.
 
 ![](doc/source/images/create-assistant-intent.png)
 
 #### Create new dialog node
 
-Now we need to add a node to handle our intent. Click on the `Dialog` [1] tab, then click on the drop down menu for the `Small Talk` node [2], and select the option `Add node below` [3].
+Now we need to add a node to handle our intent. Click on the `Dialog` [1] tab, then click on the drop down menu for the `Small Talk` node [2], and select the `Add node below` [3] option.
 
 ![](doc/source/images/assistant-add-node.png)
 
@@ -166,39 +174,61 @@ Name the node "Ask about product" [1] and assign it our new intent [2].
 
 ![](doc/source/images/assistant-define-node.png)
 
-This means that if Assistant recognizes a user input such as "how do I set the time?", it will direct the conversation to this node.
+This means that if Watson Assistant recognizes a user input such as "how do I set the time?", it will direct the conversation to this node.
 
 #### Enable webhook from Assistant
 
-Set up access to our WebHook for the skill you created in Step #4.
+Set up access to our WebHook for the action you created in Step #4.
+
+Select the `Options` tab [1]:
 
 ![](doc/source/images/assistant-define-webhook.png)
 
-* In the cell you want to trigger action, click on `Customize`, and enable Webhooks for this node:
+Click the `Add authorization` button to enter the user name and password associated with our IBM Cloud Functions action.
+
+As shown earlier, here is the `API key` associated with our action:
+
+![](doc/source/images/action-uname-pwd.png)
+
+The value before the `:` represents the `User name`, and the value after the `:` respresents the `Password`. Note that the `:` should not appear in either value:
+
+![](doc/source/images/assistant-set-action-creds.png)
+
+`Save` the credentials.
+
+Return to the `Dialog` tab, and click on the `Ask about product` node. From the details panel for the node, click on `Customize`, and enable Webhooks for this node:
 
 ![](doc/source/images/assistant-enable-webhook-for-node.png)
 
-* Then you can add params, change name of return variable, etc.
+Click `Apply`. The dialog node should now look like this:
 
 ![](doc/source/images/assistant-node-config-webhook.png)
 
 #### Test in Assistant Tooling
 
-* Using the `Try it` feature, add the context variable `my_creds` and see if it works (probably won't return anything meaningful in the test window, but you should NOT get an error due to credentials).
+From the `Dialog` panel, click the `Try it` button located at the top right side of the panel.
 
-> Note: You must enter a response to trigger the assistant dialog node that calls the action.
+Click `Manage Content` to configure some variables. Add the variable name `$my_creds`, then add your IBM Cloud Functions action credentials using the following format:
 
-![](doc/source/images/assistant-context-vars.png)
-
+```json
 {"user":"7a4d1a77-2429-xxxx-xxxx-a2b438e15bea","password":"RVVEdpPFLAuuTwFXjjKujPKY0hUOEztxxxxxxxxxonHeF7OdAm77Uc34GL2wQHDx"}
-
-These values are pulled from the `Functions` action panel, click on `API-KEY` which then takes you to the `API Key` panel, where the key is found:
-
-```bash
-7a4d1a77-2429-xxxx-xxxx-a2b438e15bea:RVVEdpPFLAuuTwFXjjKujPKY0hUOEztxxxxxxxxxonHeF7OdAm77Uc34GL2wQHDx
 ```
 
-> Note: the value before the `:` is the user, and after is the password. Do not include the `:` in either value.
+> Remember: the API key for your action has user name and password separated by a `colon`. Make sure you parse it correctly when updating the `$my_creds` variable value.
+
+The panel should look similar to this:
+
+![](doc/source/images/try-it-vars-before.png)
+
+Click the `X` to return to the dialog window, and enter some user input:
+
+![](doc/source/images/try-it-dialog.png)
+
+Note that the second input value has triggered our `Ask about product` dialog node, which is indicated by the `@product:ecobee` response. If it shows an error, it is most likely that the `$my_creds` variable is in the wrong format or the API key values are wrong.
+
+Even though a result was not displayed, you can see that a result was properly assigned to the `$webhook_result_1` variable:
+
+![](doc/source/images/try-it-vars-after.png)
 
 ### 6. Get IBM Cloud services credentials and add to .env file
 
