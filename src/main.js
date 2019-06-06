@@ -170,9 +170,9 @@ class Main extends React.Component {
       }
     })
       .then(json => {
-        // console.log('+++ ASSISTANT RESULTS +++');
-        // const util = require('util');
-        // console.log(util.inspect(json, false, null));
+        console.log('+++ ASSISTANT RESULTS +++');
+        const util = require('util');
+        console.log(util.inspect(json, false, null));
 
         // console.log('json.output.text[0]: ' + json.output.text[0]);
         this.printContext(json.context);
@@ -182,7 +182,7 @@ class Main extends React.Component {
         // or Discovery data returned in the context
         if (json.context.webhook_result_1) {
           console.log('GOT DISCO OUTPUT!');
-          var passages = json.context.webhook_result_1.response.result.passages;
+          var passages = json.context.webhook_result_1.passages;
           passages = utils.formatData(passages);
           
           console.log('+++ DISCO RESULTS +++');
