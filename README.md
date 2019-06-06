@@ -110,7 +110,7 @@ Once your action is created, click on the `Code` tab [1]:
 
 In the code editor window [2], cut and paste in the code from the `disco-action.js` file found in the `/actions` directory of your local repo.
 
-If you press the `Invoke` button [3], it will fail due to credentials not being defined yet.
+If you press the `Invoke` button [3], it will fail due to credentials not being defined yet. We'll do this next in the following step.
 
 Next, select the `Parameters` tab [1]:
 
@@ -128,21 +128,21 @@ For values, please use the values associated with the Discovery service you crea
 
 > Note: Make sure to enclose your values in double quotes.
 
-For the `input` value [2], use a default question such as "how do I turn on the heater?". 
+For the `input` value [2], use a default question such as "how do I turn on the heater?".
+
+Now that the credentials are set, along with our test question, return to the `Code` panel and press the `Invoke` button again. Now you should see actual results returned from the Discovery service:
+
+![](doc/source/images/action-code-invoke.png)
 
 Next, go to the `Endpoints` panel [1]:
 
 ![](doc/source/images/action-endpoint.png)
 
-Take note of the REST API endpoint value [2], as this will be needed in a future step.
+Click the checkbox for `Enable as Web Action` [2]. This will generate a public endpoint URL [3] that should end in `.json`.
 
-To verify you have entered the correct Discovery parameters, execute the provied `curl` command [3]. If it fails, re-check your parameter values.
+Take note of the REST API endpoint value [3], as this will be needed in a future step.
 
-Click on the `API-KEY` button [4] to view the credentials for your action.
-
-![](doc/source/images/action-creds.png)
-
-Your credentials [1] will be required in the next step when you access the action from Watson Assistant.
+To verify you have entered the correct Discovery parameters, execute the provied `curl` command [4]. If it fails, re-check your parameter values.
 
 > NOTE: An IBM Cloud Functions service will not show up in your dashboard resource list. To return to your defined `Action`, you will need to access Cloud Functions by selecting `Create Resource` from the main dashboard panel (as shown at the beginning of this step).
 
@@ -159,6 +159,8 @@ This dialog skill contains all of the nodes needed to have a typical call center
 Create a new intent that can detect when the user is asking about operating the Ecobee thermostat.
 
 From the `Customer Care Sample Skill` panel, select the `Intents` tab.
+
+Click the `Create intent` button.
 
 Name the intent `#Product_Information`, and at a minimum, enter the following example questions to be associated with it.
 
@@ -178,23 +180,13 @@ This means that if Watson Assistant recognizes a user input such as "how do I se
 
 #### Enable webhook from Assistant
 
-Set up access to our WebHook for the action you created in Step #4.
+Set up access to our WebHook for the IBM Cloud Functions action you created in Step #4.
 
 Select the `Options` tab [1]:
 
 ![](doc/source/images/assistant-define-webhook.png)
 
-Click the `Add authorization` button to enter the user name and password associated with our IBM Cloud Functions action.
-
-As shown earlier, here is the `API key` associated with our action:
-
-![](doc/source/images/action-uname-pwd.png)
-
-The value before the `:` represents the `User name`, and the value after the `:` respresents the `Password`. Note that the `:` should not appear in either value:
-
-![](doc/source/images/assistant-set-action-creds.png)
-
-`Save` the credentials.
+Enter the public URL endpoint for your action [2]. (Note that the URL should end with `.json`).
 
 Return to the `Dialog` tab, and click on the `Ask about product` node. From the details panel for the node, click on `Customize`, and enable Webhooks for this node:
 
@@ -204,41 +196,35 @@ Click `Apply`. The dialog node should now look like this:
 
 ![](doc/source/images/assistant-node-config-webhook.png)
 
+... and this:
+
+![](doc/source/images/assistant-node-config-webhook-2.png)
+
 #### Test in Assistant Tooling
 
 From the `Dialog` panel, click the `Try it` button located at the top right side of the panel.
 
-Click `Manage Content` to configure some variables. Add the variable name `$my_creds`, then add your IBM Cloud Functions action credentials using the following format:
-
-```json
-{"user":"7a4d1a77-2429-xxxx-xxxx-a2b438e15bea","password":"RVVEdpPFLAuuTwFXjjKujPKY0hUOEztxxxxxxxxxonHeF7OdAm77Uc34GL2wQHDx"}
-```
-
-> Remember: the API key for your action has user name and password separated by a `colon`. Make sure you parse it correctly when updating the `$my_creds` variable value.
-
-The panel should look similar to this:
-
-![](doc/source/images/try-it-vars-before.png)
-
-Click the `X` to return to the dialog window, and enter some user input:
+Enter some user input:
 
 ![](doc/source/images/try-it-dialog.png)
 
-Note that the second input value has triggered our `Ask about product` dialog node, which is indicated by the `@product:ecobee` response. If it shows an error, it is most likely that the `$my_creds` variable is in the wrong format or the API key values are wrong.
+Note that the input "how do I turn on the heater?" has triggered our `Ask about product` dialog node, which is indicated by the `#Product_Information` response.
 
-Even though a result was not displayed, you can see that a result was properly assigned to the `$webhook_result_1` variable:
+And because we specified that `$webhook_result_1.passages` be the response, that value is displayed also.
+
+You can also verify that the call was successfully completed by clicking on the `Manage Context` button at the top right. The response from the Discovery query will be stored in the `$webhook_result_1` variable:
 
 ![](doc/source/images/try-it-vars-after.png)
 
 ### 6. Get IBM Cloud services credentials and add to .env file
 
+Copy the local `env.sample` file and rename it `.env`:
+
 ```bash
 cp env.sample .env
 ```
 
-Copy the `env.sample` file and rename it `.env` and update the `<***>` tags with the credentials from your Assistant service.
-
-#### `env.sample:`
+Update the `.env` file with the credentials from your Assistant service.
 
 ```bash
 # Copy this file to .env and replace the credentials with
@@ -288,39 +274,26 @@ Sample questions:
 * Results will be returned in Assistant context object:
 
 ```
-{ conversation_id: "b59b187a-f4b7-4fe7-81ef-29073abbb8ee",
+{ conversation_id: '70bc6532-d3fb-4e4c-9083-7a1c752ba6ef',
   system: 
    { initialized: true,
      dialog_stack: [ { dialog_node: 'root' } ],
-     dialog_turn_counter: 2,
-     dialog_request_counter: 2,
-     _node_output_map: { node_15_1488295465298: [ 0 ] },
-     last_branch_node: "node_2_1467831978407",
+     dialog_turn_counter: 3,
+     dialog_request_counter: 3,
+     _node_output_map:
+      { node_15_1488295465298: [ 0 ],
+        response_1_1559767826196: [ 0 ] },
      branch_exited: true,
-     branch_exited_reason: "completed" },
+     branch_exited_reason: 'completed' },
   webhook_result_1:
-   { activationId: "88167283e985494b967283e985894b7e",
-     annotations:
-      [ { key: "path", value: "IBM Cloud Storage_dev/disco-action" },
-        { key: "waitTime", value: 64 },
-        { key: "kind", value: 'nodejs:8' },
-        { key: "timeout", value: false },
-        { key: "limits",
-          value: { concurrency: 1, logs: 10, memory: 256, timeout: 60000 } } ],
-     duration: 899,
-     end: 1556222972039,
-     logs: [],
-     name: "disco-action",
-     namespace: "IBM Cloud Storage_dev",
-     publish: false,
-     response:
-      { result:
-         { matching_results: 9,
-           passages:
-            [ { document_id: "3a5efee70d8cc9d70e2b94d22c15e2d1_2",
-                end_offset: 2791,
-                field: 'text',
-                passage_score: 6.752501692678998,
+   { matching_results: 9,
+     passages:
+      [ { document_id: '3a5efee70d8cc9d70e2b94d22c15e2d1_2',
+          end_offset: 2791,
+          field: 'text',
+          passage_score: 6.752501692678998,
+          passage_text: 'Specify what the heat pump runs when the O/B Reversing Valve is engaged: On Cool runs cooling when O/B engages (most cases), or On Heat runs heating when O/B engages. 4. Touch Next. You will be returned to the Equipment configuration menu. Furnaces/Boilers If you have a furnace or boiler installed: 1. Select the heating menu. 2. Configure the heater type',
+          start_offset: 2435 },
 ```
 
 # Learn more
