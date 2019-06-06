@@ -92,7 +92,7 @@ The goal is to annotate all of the pages in the document so Discovery can learn 
 
 * [1] is the list of pages in the manual. As each is processed, a green check mark will appear on the page.
 * [2] is the current page being annotated.
-* ]3] is where you select text and assign it a label.
+* [3] is where you select text and assign it a label.
 * [4] is the list of labels you can assign to the page text.
 * Click [5] to submit the page to Discovery.
 * Click [6] when you have completed the annotation.
@@ -329,7 +329,7 @@ Sample questions:
 
 # Access to results in application
 
-* This is theformat for how Discovery results will be returned in the Assistant context object:
+* This is the format for how Discovery results will be returned in the Assistant context object:
 
 ```
 { conversation_id: '70bc6532-d3fb-4e4c-9083-7a1c752ba6ef',
