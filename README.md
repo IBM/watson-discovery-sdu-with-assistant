@@ -82,11 +82,11 @@ In upcoming steps, you will need to provide the credentials to access your Disco
 
 The `Collection ID` and `Environment ID` values can be found by clicking the dropdown button [1] located at the top right side of your collection panel:
 
-![](doc/source/images/get-collection-creds.png)
+![get-collection-creds](doc/source/images/get-collection-creds.png)
 
 Return to the main panel of your Discovery service, and click the `Service credentials` [1] tab:
 
-![](doc/source/images/disco-creds.png)
+![disco-creds](doc/source/images/disco-creds.png)
 
 Click the `View credentials` [2] drop-down menu to view the `iam_apikey` [3] and `URL` endpoint [4] for your service.
 
@@ -94,7 +94,7 @@ Click the `View credentials` [2] drop-down menu to view the `iam_apikey` [3] and
 
 Start the `Cloud Functions` service by selecting `Create Resource` from the IBM Cloud dashboard. Enter `functions` as the filter [1], then select the `Functions` card [2]:
 
-![](doc/source/images/action-start-service.png)
+![action-start-service](doc/source/images/action-start-service.png)
 
 From the `Functions` main panel, click on the `Actions` tab. Then click on `Create`.
 
@@ -102,11 +102,11 @@ From the `Create` panel, select the `Create Action` option.
 
 On the `Create Action` panel, provide a unique `Action Name` [1], keep the default package [2], and select the `Node.js 10` [3] runtime. Click `Create` [4] to create the action.
 
-![](doc/source/images/action-create.png)
+![action-create](doc/source/images/action-create.png)
 
 Once your action is created, click on the `Code` tab [1]:
 
-![](doc/source/images/action-code.png)
+![action-code](doc/source/images/action-code.png)
 
 In the code editor window [2], cut and paste in the code from the `disco-action.js` file found in the `/actions` directory of your local repo.
 
@@ -114,7 +114,7 @@ If you press the `Invoke` button [3], it will fail due to credentials not being 
 
 Next, select the `Parameters` tab [1]:
 
-![](doc/source/images/action-params.png)
+![action-params](doc/source/images/action-params.png)
 
 Add the following keys:
 
@@ -132,11 +132,11 @@ For the `input` value [2], use a default question such as "how do I turn on the 
 
 Now that the credentials are set, along with our test question, return to the `Code` panel and press the `Invoke` button again. Now you should see actual results returned from the Discovery service:
 
-![](doc/source/images/action-code-invoke.png)
+![action-code-invoke](doc/source/images/action-code-invoke.png)
 
 Next, go to the `Endpoints` panel [1]:
 
-![](doc/source/images/action-endpoint.png)
+![action-endpoint](doc/source/images/action-endpoint.png)
 
 Click the checkbox for `Enable as Web Action` [2]. This will generate a public endpoint URL [3] that should end in `.json`.
 
@@ -164,17 +164,17 @@ Click the `Create intent` button.
 
 Name the intent `#Product_Information`, and at a minimum, enter the following example questions to be associated with it.
 
-![](doc/source/images/create-assistant-intent.png)
+![create-assistant-intent](doc/source/images/create-assistant-intent.png)
 
 #### Create new dialog node
 
 Now we need to add a node to handle our intent. Click on the `Dialog` [1] tab, then click on the drop down menu for the `Small Talk` node [2], and select the `Add node below` [3] option.
 
-![](doc/source/images/assistant-add-node.png)
+![assistant-add-node](doc/source/images/assistant-add-node.png)
 
 Name the node "Ask about product" [1] and assign it our new intent [2].
 
-![](doc/source/images/assistant-define-node.png)
+![assistant-define-node](doc/source/images/assistant-define-node.png)
 
 This means that if Watson Assistant recognizes a user input such as "how do I set the time?", it will direct the conversation to this node.
 
@@ -184,21 +184,21 @@ Set up access to our WebHook for the IBM Cloud Functions action you created in S
 
 Select the `Options` tab [1]:
 
-![](doc/source/images/assistant-define-webhook.png)
+![assistant-define-webhook](doc/source/images/assistant-define-webhook.png)
 
 Enter the public URL endpoint for your action [2]. (Note that the URL should end with `.json`).
 
 Return to the `Dialog` tab, and click on the `Ask about product` node. From the details panel for the node, click on `Customize`, and enable Webhooks for this node:
 
-![](doc/source/images/assistant-enable-webhook-for-node.png)
+![assistant-enable-webhook-for-node](doc/source/images/assistant-enable-webhook-for-node.png)
 
 Click `Apply`. The dialog node should now look like this:
 
-![](doc/source/images/assistant-node-config-webhook.png)
+![assistant-node-config-webhook](doc/source/images/assistant-node-config-webhook.png)
 
 ... and this:
 
-![](doc/source/images/assistant-node-config-webhook-2.png)
+![assistant-node-config-webhook-2](doc/source/images/assistant-node-config-webhook-2.png)
 
 #### Test in Assistant Tooling
 
@@ -206,7 +206,7 @@ From the `Dialog` panel, click the `Try it` button located at the top right side
 
 Enter some user input:
 
-![](doc/source/images/try-it-dialog.png)
+![try-it-dialog](doc/source/images/try-it-dialog.png)
 
 Note that the input "how do I turn on the heater?" has triggered our `Ask about product` dialog node, which is indicated by the `#Product_Information` response.
 
@@ -214,7 +214,7 @@ And because we specified that `$webhook_result_1.passages` be the response, that
 
 You can also verify that the call was successfully completed by clicking on the `Manage Context` button at the top right. The response from the Discovery query will be stored in the `$webhook_result_1` variable:
 
-![](doc/source/images/try-it-vars-after.png)
+![try-it-vars-after](doc/source/images/try-it-vars-after.png)
 
 ### 6. Get IBM Cloud services credentials and add to .env file
 
@@ -248,7 +248,7 @@ An additional `WORKSPACE_ID` value is required to access the Watson Assistant se
 
 Click the option button (highlighted in the image above) to view all of your skill details and service credentials:
 
-![](doc/source/images/sample-skill-creds.png)
+![sample-skill-creds](doc/source/images/sample-skill-creds.png)
 
 ### 7. Run the application
 
@@ -267,7 +267,7 @@ Sample questions:
 
 # Sample Output
 
-![](doc/source/images/sample-output.png)
+![sample-output](doc/source/images/sample-output.png)
 
 # Access to results in application
 
