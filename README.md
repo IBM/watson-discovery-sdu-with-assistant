@@ -128,9 +128,7 @@ For values, please use the values associated with the Discovery service you crea
 
 > Note: Make sure to enclose your values in double quotes.
 
-For the `input` value [2], use a default question such as "how do I turn on the heater?".
-
-Now that the credentials are set, along with our test question, return to the `Code` panel and press the `Invoke` button again. Now you should see actual results returned from the Discovery service:
+Now that the credentials are set, return to the `Code` panel and press the `Invoke` button again. Now you should see actual results returned from the Discovery service:
 
 ![action-code-invoke](doc/source/images/action-code-invoke.png)
 
@@ -192,11 +190,15 @@ Return to the `Dialog` tab, and click on the `Ask about product` node. From the 
 
 ![assistant-enable-webhook-for-node](doc/source/images/assistant-enable-webhook-for-node.png)
 
-Click `Apply`. The dialog node should now look like this:
+Click `Apply`.
+
+The dialog node should have a `Return variable` [1] set automatically to `$webhook_result_1`. This is the variable name you can use to access the result from the Discovery service query.
 
 ![assistant-node-config-webhook](doc/source/images/assistant-node-config-webhook.png)
 
-... and this:
+You will also need to pass in the users question via the parameter `input` [2]. If you fail to do this, Discovery will return results based on a blank query.
+
+Optionally, you can add these responses to aid in debugging:
 
 ![assistant-node-config-webhook-2](doc/source/images/assistant-node-config-webhook-2.png)
 
