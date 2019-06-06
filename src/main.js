@@ -174,34 +174,36 @@ class Main extends React.Component {
         const util = require('util');
         console.log(util.inspect(json, false, null));
 
-        // console.log('json.output.text[0]: ' + json.output.text[0]);
-        this.printContext(json.context);
-        console.log('OUTPUT: ' + json.output.text[0]);
-
-        // returned text from assistant will either put text string 
-        // or Discovery data returned in the context
+        // returned text from assistant will either be a pre-canned 
+        // dialog response, or Discovery data
         if (json.context.webhook_result_1) {
           console.log('GOT DISCO OUTPUT!');
           var passages = json.context.webhook_result_1.passages;
           passages = utils.formatData(passages);
           
-          console.log('+++ DISCO RESULTS +++');
-          const util = require('util');
-          console.log(util.inspect(passages, false, null));
-          console.log('numMatches: ' + passages.results.length);
-  
+          // console.log('+++ DISCO RESULTS +++');
+          // const util = require('util');
+          // console.log(util.inspect(passages, false, null));
+          // console.log('numMatches: ' + passages.results.length);
+
+          // add a header to our message
+          conversation.push(
+            { id: Math.random(),
+              text: 'Here are some excerpts from the Users Guide:',
+              owner: 'watson'});
+
           // add to message list
           passages.results.forEach(function(result) {
             conversation.push(
-              { id: conversation.length,
+              { id: Math.random(),
                 text: result.text,
-                owner: 'watson'});
+                owner: 'watson-cont'});
           });
-  
+
         } else {
           // add to message list
           conversation.push(
-            { id: conversation.length,
+            { id: Math.random(),
               text: json.output.text[0],
               owner: 'watson'
             });
