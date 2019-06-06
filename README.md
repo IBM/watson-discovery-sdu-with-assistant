@@ -70,11 +70,61 @@ As shown in the video below, launch the **Watson Discovery** tool and create a *
 
 The `Ecobee` is a popular residential thermostat that has a wifi interface and multiple configuration options.
 
+Before applying SDU to our document, lets do some simple queries on the data so that we can compare it to results found after applying SDU.
+
+![disco-collection-panel-pre](doc/source/images/disco-collection-panel-pre.png)
+
+Click the `Build your own query` [1] button.
+
+![disco-build-query](doc/source/images/disco-build-query.png)
+
+Enter queries related to the operation of the thermostat and view the results. As you will see, the results are not very useful or even related to the question.
+
 #### Annotate with SDU
 
-Once uploaded, you can then use the `Configure data` option to start the SDU process.
+Once uploaded, click the `Configure data` button (located in the top right corner of the collection panel) to start the SDU process.
 
-ADD VIDEO ....
+Here is the layout of the `Identify fields` tab of the SDU annotation panel:
+
+![disco-sdu-panel](doc/source/images/disco-sdu-panel.png)
+
+The goal is to annotate all of the pages in the document so Discovery can learn what data is important, and what data it can ignore.
+
+* [1] is the list of pages in the manual. As each is processed, a green check mark will appear on the page.
+* [2] is the current page being annotated.
+* ]3] is where you select text and assign it a label.
+* [4] is the list of labels you can assign to the page text.
+* Click [5] to submit the page to Discovery.
+* Click [6] when you have completed the annotation.
+
+As you go though the annotations one page at a time, Discovery is learning and should start automatically updating the upcoming pages. Once you get to a page that is already correctly annotated, you can stop, or simply click `Submit` [5] to acknowledge it is correct.
+
+For this specific Users Guide, at a minimum, it is suggested to mark the following:
+* All headers and sub-headers (in light green text) as a `subtitle`
+* All page numbers as `footers`
+* The main title page as `title`
+* Table of contents as `table_of_contents`
+* All warranty and licensing infomation in the last pages as `footer`
+
+All other text should be marked as `text`.
+
+Once you click the `Apply changes to collection` button [6], you will be asked to reload the document. Choose the same `.pdf` document as before.
+
+Next, click on the `Manage fields` [1] tab.
+
+![disco-manage-fields](doc/source/images/disco-manage-fields.png)
+
+* [2] Here is where you tell Discovery which fields to ignore. Using the `on/off` buttons, turn off all labels except `subtitles` and `text`.
+* [3] is telling Discovery to split the document apart, based on `subtitle`.
+* Click [4] to submit your changes.
+
+Once again, you will be asked to reload the document.
+
+Now, as a result of splitting the document apart, your collection will look very different:
+
+![disco-collection-panel](doc/source/images/disco-collection-panel.png)
+
+Return to the query panel (click `Build your own query`) and see how much better the results are compared to the last time, before SDU was applied.
 
 #### Store credentials for future use
 
@@ -196,7 +246,13 @@ The dialog node should have a `Return variable` [1] set automatically to `$webho
 
 ![assistant-node-config-webhook](doc/source/images/assistant-node-config-webhook.png)
 
-You will also need to pass in the users question via the parameter `input` [2]. If you fail to do this, Discovery will return results based on a blank query.
+You will also need to pass in the users question via the parameter `input` [2]. The key needs to be set to the value:
+
+```bash
+"<?input.text?>"
+```
+
+If you fail to do this, Discovery will return results based on a blank query.
 
 Optionally, you can add these responses to aid in debugging:
 
@@ -273,7 +329,7 @@ Sample questions:
 
 # Access to results in application
 
-* Results will be returned in Assistant context object:
+* This is theformat for how Discovery results will be returned in the Assistant context object:
 
 ```
 { conversation_id: '70bc6532-d3fb-4e4c-9083-7a1c752ba6ef',

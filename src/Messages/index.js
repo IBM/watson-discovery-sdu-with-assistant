@@ -65,8 +65,10 @@ const getClassName = item => {
 const getImage = item => {
   if (item.owner === 'user') {
     return 'https://semantic-ui.com/images/avatar/small/stevie.jpg';
-  } else { 
+  } else if (item.owner === 'watson') { 
     return '/images/watson.png';
+  } else {
+    return '/images/separator.png';    
   }
 };
 
