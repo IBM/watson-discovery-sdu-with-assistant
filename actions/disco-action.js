@@ -58,12 +58,10 @@ function main(params) {
     discovery.query({
       'environment_id': params.environment_id,
       'collection_id': params.collection_id,
-      // 'configuration_id': params.configuration_id,
       'natural_language_query': params.input,
       'passages': true,
       'count': 3,
       'passages_count': 3
-      // 'return': 'text'
     }, function(err, data) {
       if (err) {
         return reject(err);
