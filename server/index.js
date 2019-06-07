@@ -20,38 +20,14 @@ require('dotenv').config({
   silent: true
 });
 
-require('isomorphic-fetch');
 const Promise = require('bluebird');
-const queryString = require('query-string');
-const queryBuilder = require('./query-builder');
 const messageBuilder = require('./message-builder');
-const discovery = require('./watson-discovery-service');
 const assistant = require('./watson-assistant-service');
-const utils = require('../lib/utils');
 
 /**
- * Back end server which handles initializing the Watson Discovery
+ * Back end server which handles initializing the Watson Assistant
  * service, and setting up route methods to handle client requests.
  */
-
-const WatsonDiscoveryService = new Promise((resolve, reject) => {
-  // listEnvironments as sanity check to ensure creds are valid
-  discovery.listEnvironments({})
-    .then(() => {
-      // environment and collection ids are always the same for Watson News
-      const environmentId = discovery.environmentId;
-      const collectionId = discovery.collectionId;
-      queryBuilder.setEnvironmentId(environmentId);
-      queryBuilder.setCollectionId(collectionId);
-      resolve(createServer());
-    })
-    .catch(error => {
-      // eslint-disable-next-line no-console
-      console.error(error);
-      reject(error);
-    });
-});
-
 const WatsonAssistantService = new Promise((resolve, reject) => {
   // listEnvironments as sanity check to ensure creds are valid
   assistant.listWorkspaces({})
@@ -59,6 +35,7 @@ const WatsonAssistantService = new Promise((resolve, reject) => {
       // environment and collection ids are always the same for Watson News
       const workspaceId = assistant.workspaceId;
       messageBuilder.setWorkspaceId(workspaceId);
+      resolve(createServer());
     })
     .catch(error => {
       // eslint-disable-next-line no-console
@@ -73,79 +50,6 @@ const WatsonAssistantService = new Promise((resolve, reject) => {
  */
 function createServer() {
   const server = require('./express');
-
-  // handles search request from search bar
-  server.get('/api/search', (req, res) => {
-    const { query, count } = req.query;
-    var params = {};
-
-    console.log('In /api/search: query = ' + query);
-
-    // add query
-    params.natural_language_query = query;
-    
-    params.count = count;
-    params.passages_count = count;
-    params.passages = true;
-    
-    var searchParams = queryBuilder.search(params);
-    discovery.query(searchParams)
-      .then(response => res.json(response))
-      .catch(error => {
-        if (error.message === 'Number of free queries per month exceeded') {
-          res.status(429).json(error);
-        } else {
-          res.status(error.code).json(error);
-        }
-      });
-  });
-
-  // handles search string appened to url
-  server.get('/:searchQuery', function(req, res){
-    var searchQuery = req.params.searchQuery.replace(/\+/g, ' ');
-    const qs = queryString.stringify({ 
-      query: searchQuery,
-      count: 4,
-      returnPassages: true,
-      queryType: 'natural_language_query'
-    });
-    const fullUrl = req.protocol + '://' + req.get('host');
-
-    console.log('In /:searchQuery: query = ' + qs);
-
-    fetch(fullUrl + `/api/search?${qs}`)
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      })
-      .then(json => {
-
-        // get all the results data in right format
-        var passages = json.passages;
-        // const util = require('util');
-        console.log('++++++++++++ DISCO RESULTS ++++++++++++++++++++');
-        // console.log(util.inspect(passages, false, null));
-        console.log('length: ' + passages.length);
-        passages = utils.formatData(passages);
-
-        res.render('index',
-          {
-            data: passages,
-            searchQuery,
-            numMatches: passages.length,
-            error: null
-          }
-        );
-      })
-      .catch(response => {
-        res.status(response.status).render('index', {
-          error: (response.status === 429) ? 'Number of free queries per month exceeded' : 'Error fetching data'
-        });
-      });
-  });
 
   // Endpoint for Watson Assistant requests
   server.post('/api/message', function(req, res) {
@@ -198,45 +102,14 @@ function createServer() {
 
   // initial start-up request
   server.get('/*', function(req, res) {
-    console.log('In /*');
+    console.log('In startup!');
 
-    // this is the inital query to the discovery service
-    console.log('Initial Search Query at start-up');
-    const params = queryBuilder.search({ 
-      natural_language_query: '',
-      count: 4,
-      highlight: false,
-      passages: true
-    });
-    return new Promise((resolve, reject) => {
-      discovery.query(params)
-        .then(results =>  {
-
-          // const util = require('util');
-          // console.log('++++++++++++ DISCO RESULTS ++++++++++++++++++++');
-          // console.log(util.inspect(results, false, null));
-      
-          // get all the results data in right format
-          var passages = results.passages;
-          passages = utils.formatData(passages);
-
-          res.render('index', { 
-            data: passages, 
-            numMatches: passages.results.length
-          });
-    
-          resolve(passages);
-        })
-        .catch(error => {
-          console.error(error);
-          reject(error);
-        });
-    });
+    // render chatbot welcome message
+    res.render('index', {});
   });
 
   return server;
 }
 
 module.exports = 
-WatsonDiscoveryService,
 WatsonAssistantService;
