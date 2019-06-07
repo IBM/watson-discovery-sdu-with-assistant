@@ -82,7 +82,7 @@ Enter queries related to the operation of the thermostat and view the results. A
 
 #### Annotate with SDU
 
-Once uploaded, click the `Configure data` button (located in the top right corner of the collection panel) to start the SDU process.
+From the collection panel, click the `Configure data` button (located in the top right corner) to start the SDU process.
 
 Here is the layout of the `Identify fields` tab of the SDU annotation panel:
 
@@ -125,6 +125,8 @@ Now, as a result of splitting the document apart, your collection will look very
 ![disco-collection-panel](doc/source/images/disco-collection-panel.png)
 
 Return to the query panel (click `Build your own query`) and see how much better the results are compared to the last time, before SDU was applied.
+
+![disco-build-query-2](doc/source/images/disco-build-query-2.png)
 
 #### Store credentials for future use
 
