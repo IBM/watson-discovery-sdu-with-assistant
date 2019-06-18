@@ -16,8 +16,8 @@ With SDU, you annotate fields within your documents to train custom conversion m
 
 Current document type support for SDU is based on your plan:
 
-Lite plans: PDF, Word, PowerPoint, Excel, JSON, HTML
-Advanced plans: PDF, Word, PowerPoint, Excel, PNG, TIFF, JPG, JSON, HTML
+  * Lite plans: PDF, Word, PowerPoint, Excel, JSON, HTML
+  * Advanced plans: PDF, Word, PowerPoint, Excel, PNG, TIFF, JPG, JSON, HTML
 
 Here is a great video that provides an overview of the benefits of SDU, and a walk-through of how to apply it to your document:
 
