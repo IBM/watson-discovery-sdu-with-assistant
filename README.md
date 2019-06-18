@@ -2,22 +2,24 @@
 
 In this code pattern, we walk you through a working example of a web app that utilizes multiple Watson services to create a better customer care experience.
 
-Using the Watson Discovery Smart Document Understanding (SDU) feature, we will enhance the Discovery model so that queries will be better focused to only search the most relevant information found in a typical users manual.
+Using the Watson Discovery Smart Document Understanding (SDU) feature, we will enhance the Discovery model so that queries will be better focused to only search the most relevant information found in a typical owner's manual.
 
-Using Watson Assistant, we will use a standard customer care dialog to handle a typical conversation between a custmomer and a company representitive. When a customer question involves operation of a product, the Assistant diaglog will communicate with the Discovery service using webhooks.
+Using Watson Assistant, we will use a standard customer care dialog to handle a typical conversation between a custmomer and a company representitive. When a customer question involves operation of a product, the Assistant dialog will communicate with the Discovery service using a webhook.
 
-## How does SDU work?
+The webhook will be created by defining a `web action` using IBM Cloud Functions.
+
+## What is SDU?
 
 SDU trains Watson Discovery to extract custom fields in your documents. Customizing how your documents are indexed into Discovery will improve the answers returned from queries.
 
-With SDU, you annotate fields within your documents to train custom conversion models. As you annotate, Watson is learning and will start predicting annotations. SDU models can be exported and used on other collections.
+With SDU, you annotate fields within your documents to train custom conversion models. As you annotate, Watson is learning and will start predicting annotations. SDU models can also be exported and used on other collections.
 
 Current document type support for SDU is based on your plan:
 
 Lite plans: PDF, Word, PowerPoint, Excel, JSON, HTML
 Advanced plans: PDF, Word, PowerPoint, Excel, PNG, TIFF, JPG, JSON, HTML
 
-Here is a brief video that provides an overview of the benefits of SDU, and a walk-through of how to use it.
+Here is a great video that provides an overview of the benefits of SDU, and a walk-through of how to apply it to your document:
 
 [![video](https://img.youtube.com/vi/Jpr3wVH3FVA/0.jpg)](https://www.youtube.com/watch?v=Jpr3wVH3FVA)
 
@@ -25,7 +27,7 @@ Here is a brief video that provides an overview of the benefits of SDU, and a wa
 
 A webhook is a mechanism that allows you to call out to an external program based on something happening in your program. When used in a Watson Assistant dialog skill, a webhook is triggered when the Assistant processes a node that has a webhook enabled. The webhook collects data that you specify or that you collect from the user during the conversation and save in context variables, and sends the data to the Webhook request URL as an HTTP POST request. The URL that receives the webhook is the listener. It performs a predefined action using the information that is provided by the webhook as specified in the webhook definition, and can optionally return a response.
 
-In our example, the webhook will communicate with an IBM Cloud Functions action, which is connected to the Watson Discovery service.
+In our example, the webhook will communicate with an IBM Cloud Functions `web action`, which is connected to the Watson Discovery service.
 
 ## Flow
 
@@ -64,7 +66,7 @@ Create the following services:
 
 #### Import the document
 
-As shown in the video below, launch the **Watson Discovery** tool and create a **new data collection** by selecting the **Upload your own data** option. Give the data collection a unique name. When prompted, select and upload the `ecobee3_UserGuide.pdf` file located in your local `data` directory.
+As shown below, launch the `Watson Discovery` tool and create a new data collection by selecting the `Upload your own data` option. Give the data collection a unique name. When prompted, select and upload the `ecobee3_UserGuide.pdf` file located in the `data` directory of your local repo.
 
 ![upload_data_into_collection](doc/source/images/upload-disco-file-for-sdu.gif)
 
@@ -78,37 +80,39 @@ Click the `Build your own query` [1] button.
 
 ![disco-build-query](doc/source/images/disco-build-query.png)
 
-Enter queries related to the operation of the thermostat and view the results. As you will see, the results are not very useful or even related to the question.
+Enter queries related to the operation of the thermostat and view the results. As you will see, the results are not very useful, and in some cases, not even related to the question.
 
 #### Annotate with SDU
 
-From the collection panel, click the `Configure data` button (located in the top right corner) to start the SDU process.
+Now let's apply SDU to our document to see if we can generate some better query responses.
+
+From the Discovery collection panel, click the `Configure data` button (located in the top right corner) to start the SDU process.
 
 Here is the layout of the `Identify fields` tab of the SDU annotation panel:
 
 ![disco-sdu-panel](doc/source/images/disco-sdu-panel.png)
 
-The goal is to annotate all of the pages in the document so Discovery can learn what data is important, and what data it can ignore.
+The goal is to annotate all of the pages in the document so Discovery can learn what text is important, and what text can be ignored.
 
 * [1] is the list of pages in the manual. As each is processed, a green check mark will appear on the page.
 * [2] is the current page being annotated.
 * [3] is where you select text and assign it a label.
 * [4] is the list of labels you can assign to the page text.
 * Click [5] to submit the page to Discovery.
-* Click [6] when you have completed the annotation.
+* Click [6] when you have completed the annotation process.
 
-As you go though the annotations one page at a time, Discovery is learning and should start automatically updating the upcoming pages. Once you get to a page that is already correctly annotated, you can stop, or simply click `Submit` [5] to acknowledge it is correct.
+As you go though the annotations one page at a time, Discovery is learning and should start automatically updating the upcoming pages. Once you get to a page that is already correctly annotated, you can stop, or simply click `Submit` [5] to acknowledge it is correct. The more pages you annotate, the better the model will be trained.
 
-For this specific Users Guide, at a minimum, it is suggested to mark the following:
-* All headers and sub-headers (in light green text) as a `subtitle`
-* All page numbers as `footers`
+For this specific owner's manual, at a minimum, it is suggested to mark the following:
+
 * The main title page as `title`
-* Table of contents as `table_of_contents`
-* All warranty and licensing infomation in the last pages as `footer`
+* The table of contents (shown in the first few pages) as `table_of_contents`
+* All headers and sub-headers (typed in light green text) as a `subtitle`
+* All page numbers as `footers`
+* All warranty and licensing infomation (located in the last few pages) as a `footer`
+* All other text should be marked as `text`.
 
-All other text should be marked as `text`.
-
-Once you click the `Apply changes to collection` button [6], you will be asked to reload the document. Choose the same `.pdf` document as before.
+Once you click the `Apply changes to collection` button [6], you will be asked to reload the document. Choose the same owner's manual `.pdf` document as before.
 
 Next, click on the `Manage fields` [1] tab.
 
@@ -124,7 +128,7 @@ Now, as a result of splitting the document apart, your collection will look very
 
 ![disco-collection-panel](doc/source/images/disco-collection-panel.png)
 
-Return to the query panel (click `Build your own query`) and see how much better the results are compared to the last time, before SDU was applied.
+Return to the query panel (click `Build your own query`) and see how much better the results are.
 
 ![disco-build-query-2](doc/source/images/disco-build-query-2.png)
 
@@ -136,15 +140,17 @@ The `Collection ID` and `Environment ID` values can be found by clicking the dro
 
 ![get-collection-creds](doc/source/images/get-collection-creds.png)
 
-Return to the main panel of your Discovery service, and click the `Service credentials` [1] tab:
+For credentials, return to the main panel of your Discovery service, and click the `Service credentials` [1] tab:
 
 ![disco-creds](doc/source/images/disco-creds.png)
 
-Click the `View credentials` [2] drop-down menu to view the `iam_apikey` [3] and `URL` endpoint [4] for your service.
+Click the `View credentials` [2] drop-down menu to view the IAM `apikey` [3] and `URL` endpoint [4] for your service.
 
 ### 4. Create IBM Cloud Functions action
 
-Start the `Cloud Functions` service by selecting `Create Resource` from the IBM Cloud dashboard. Enter `functions` as the filter [1], then select the `Functions` card [2]:
+Now let's create the `web action` that will make queries against our Discovery collection.
+
+Start the `IBM Cloud Functions` service by selecting `Create Resource` from the IBM Cloud dashboard. Enter `functions` as the filter [1], then select the `Functions` card [2]:
 
 ![action-start-service](doc/source/images/action-start-service.png)
 
@@ -152,7 +158,7 @@ From the `Functions` main panel, click on the `Actions` tab. Then click on `Crea
 
 From the `Create` panel, select the `Create Action` option.
 
-On the `Create Action` panel, provide a unique `Action Name` [1], keep the default package [2], and select the `Node.js 10` [3] runtime. Click `Create` [4] to create the action.
+On the `Create Action` panel, provide a unique `Action Name` [1], keep the default package [2], and select the `Node.js 10` [3] runtime. Click the `Create` button [4] to create the action.
 
 ![action-create](doc/source/images/action-create.png)
 
@@ -160,11 +166,11 @@ Once your action is created, click on the `Code` tab [1]:
 
 ![action-code](doc/source/images/action-code.png)
 
-In the code editor window [2], cut and paste in the code from the `disco-action.js` file found in the `/actions` directory of your local repo.
+In the code editor window [2], cut and paste in the code from the `disco-action.js` file found in the `actions` directory of your local repo. The code is pretty straight-forward - it simply connects to the Discovery service, makes a query against the collection, then returns the response.
 
-If you press the `Invoke` button [3], it will fail due to credentials not being defined yet. We'll do this next in the following step.
+If you press the `Invoke` button [3], it will fail due to credentials not being defined yet. We'll do this next.
 
-Next, select the `Parameters` tab [1]:
+Select the `Parameters` tab [1]:
 
 ![action-params](doc/source/images/action-params.png)
 
@@ -173,7 +179,6 @@ Add the following keys:
 * url
 * environment_id
 * collection_id
-* input
 * iam_apikey
 
 For values, please use the values associated with the Discovery service you created in the previous step.
@@ -190,7 +195,7 @@ Next, go to the `Endpoints` panel [1]:
 
 Click the checkbox for `Enable as Web Action` [2]. This will generate a public endpoint URL [3] that should end in `.json`.
 
-Take note of the REST API endpoint value [3], as this will be needed in a future step.
+Take note of the REST API endpoint value [3], as this will be needed by Watson Assistant in a future step.
 
 To verify you have entered the correct Discovery parameters, execute the provied `curl` command [4]. If it fails, re-check your parameter values.
 
@@ -198,7 +203,7 @@ To verify you have entered the correct Discovery parameters, execute the provied
 
 ### 5. Configure Watson Assistant
 
-As shown in the video below, launch the **Watson Assistant** tool and create a new **dialog skill**. Select the `Use sample skill` as your starting point.
+As shownn below, launch the `Watson Assistant` tool and create a new dialog skill. Select the `Use sample skill` option as your starting point.
 
 ![upload_data_into_collection](doc/source/images/create-skill.gif)
 
@@ -206,7 +211,9 @@ This dialog skill contains all of the nodes needed to have a typical call center
 
 #### Add new intent
 
-Create a new intent that can detect when the user is asking about operating the Ecobee thermostat.
+The default customer care dialog does not have a way to deal with any questions involving outside resources, so we will need to add this.
+
+Create a new `intent` that can detect when the user is asking about operating the Ecobee thermostat.
 
 From the `Customer Care Sample Skill` panel, select the `Intents` tab.
 
