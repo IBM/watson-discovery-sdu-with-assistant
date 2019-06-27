@@ -39,6 +39,10 @@ In our example, the webhook will communicate with an IBM Cloud Functions `web ac
 1. If the user asks a product operation question, a search query is passed to a predefined IBM Cloud Functions action.
 1. The Cloud Functions action will query the Watson Discovery service and return the results.
 
+# Watch the Video
+
+[![video](https://img.youtube.com/vi/-yniuX-Poyw/0.jpg)](https://youtu.be/-yniuX-Poyw)
+
 # Steps:
 
 1. [Clone the repo](#1-clone-the-repo)
