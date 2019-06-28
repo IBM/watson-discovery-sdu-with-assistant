@@ -29,6 +29,8 @@ A webhook is a mechanism that allows you to call out to an external program base
 
 In our example, the webhook will communicate with an IBM Cloud Functions `web action`, which is connected to the Watson Discovery service.
 
+> Note: Using the Watson Assistant Search Skill is another option that could have been used here. Similar to using a webhook, a Search Skill can be defined that can be used to query a Watson Discovery collection. This feature, however, is still in beta testing and only available with IBM Cloud paid plans. For that reason, we have choosen to use webhooks at this time. Hopefully, this feature can be added to this code pattern in the future. Click [here](https://cloud.ibm.com/docs/services/assistant?topic=assistant-skill-search-add) for more information about the Watson Assistant Search Skill.
+
 ## Flow
 
 ![architecture](doc/source/images/architecture.png)
