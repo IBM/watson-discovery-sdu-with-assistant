@@ -1,3 +1,5 @@
+[![Build Status](https://api.travis-ci.org/IBM/watson-discovery-sdu-with-assistant.svg?branch=master)](https://travis-ci.org/IBM/watson-discovery-sdu-with-assistant)
+
 # Access Watson Discovery SDU document with Watson Assistant
 
 In this code pattern, we walk you through a working example of a web app that utilizes multiple Watson services to create a better customer care experience.
