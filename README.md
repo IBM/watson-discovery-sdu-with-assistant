@@ -213,7 +213,7 @@ To verify you have entered the correct Discovery parameters, execute the provied
 
 > Note: The beta version of Watson Assistant is required to complete the following step. Specifically, the beta version adds the ability to assign a webhook to a dialog node. To request participation in the beta program, click [here](https://cloud.ibm.com/docs/services/assistant?topic=assistant-feedback#feedback-beta).
 
-As shownn below, launch the `Watson Assistant` tool and create a new dialog skill. Select the `Use sample skill` option as your starting point.
+As shown below, launch the `Watson Assistant` tool and create a new dialog skill. Select the `Use sample skill` option as your starting point.
 
 ![upload_data_into_collection](doc/source/images/create-skill.gif)
 
