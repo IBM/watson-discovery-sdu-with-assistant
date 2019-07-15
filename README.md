@@ -10,7 +10,7 @@ Using Watson Assistant, we will use a standard customer care dialog to handle a 
 
 The webhook will be created by defining a `web action` using IBM Cloud Functions.
 
-> Note: The webhook feature in Watson Assistant is currently only available in beta. Click [here](https://cloud.ibm.com/docs/services/assistant?topic=assistant-beta) for instructions on how to particiapate in the beta program.
+> Note: The webhook feature in Watson Assistant is currently only available in beta. Click [here](https://cloud.ibm.com/docs/services/assistant?topic=assistant-beta) for instructions on how to participate in the beta program.
 
 ## What is SDU?
 
