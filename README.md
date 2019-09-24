@@ -10,8 +10,6 @@ Using Watson Assistant, we will use a standard customer care dialog to handle a 
 
 The webhook will be created by defining a `web action` using IBM Cloud Functions.
 
-> Note: The webhook feature in Watson Assistant is currently only available in beta. Click [here](https://cloud.ibm.com/docs/services/assistant?topic=assistant-beta) for instructions on how to participate in the beta program.
-
 ## What is SDU?
 
 SDU trains Watson Discovery to extract custom fields in your documents. Customizing how your documents are indexed into Discovery will improve the answers returned from queries.
@@ -212,8 +210,6 @@ To verify you have entered the correct Discovery parameters, execute the provied
 > NOTE: An IBM Cloud Functions service will not show up in your dashboard resource list. To return to your defined `Action`, you will need to access Cloud Functions by selecting `Create Resource` from the main dashboard panel (as shown at the beginning of this step).
 
 ### 5. Configure Watson Assistant
-
-> Note: The beta version of Watson Assistant is required to complete the following step. Specifically, the beta version adds the ability to assign a webhook to a dialog node. To request participation in the beta program, click [here](https://cloud.ibm.com/docs/services/assistant?topic=assistant-feedback#feedback-beta).
 
 As shown below, launch the `Watson Assistant` tool and create a new dialog skill. Select the `Use sample skill` option as your starting point.
 
