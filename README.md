@@ -201,7 +201,7 @@ Next, go to the `Endpoints` panel [1]:
 
 ![action-endpoint](doc/source/images/action-endpoint.png)
 
-Click the checkbox for `Enable as Web Action` [2]. This will generate a public endpoint URL [3] that should end in `.json`.
+Click the checkbox for `Enable as Web Action` [2]. This will generate a public endpoint URL [3].
 
 Take note of the REST API endpoint value [3], as this will be needed by Watson Assistant in a future step.
 
@@ -305,8 +305,8 @@ Update the `.env` file with the credentials from your Assistant service.
 # Copy this file to .env and replace the credentials with
 # your own before starting the app.
 
-# Watson Discovery
-ASSISTANT_WORKSPACE_ID=<add_assistant_workspace_id>
+# Watson Assistant
+ASSISTANT_SKILL_ID=<add_assistant_skill_id>
 ASSISTANT_IAM_APIKEY=<add_assistant_iam_apikey>
 
 # Run locally on a non-default port (default is 3000)
@@ -315,13 +315,11 @@ ASSISTANT_IAM_APIKEY=<add_assistant_iam_apikey>
 
 Credentials can be found by clicking the Service Credentials tab, then the View Credentials option from the panel of your created Watson service.
 
-An additional `WORKSPACE_ID` value is required to access the Watson Assistant service. To get this value, select the `Manage` tab, then the `Launch tool` button from the panel of your Watson Assistance service. From the service instance panel, select the `Skills` tab to display the skills that exist for your service. For this tutorial, we will be using the `Custom Skill Sample Skill` that comes with the service:
+An additional `ASSISTANT_SKILL_ID` value is required to access the Watson Assistant service. To get this value, select the `Manage` tab, then the `Launch tool` button from the panel of your Watson Assistance service. From the service instance panel, select your Assistant to display the assigned skills. For this code pattern, we used the diaglog skill named `Custom Skill Sample Skill` that comes with the service:
 
-<p align="center">
-  <img width="300" src="doc/source/images/sample-skill.png">
-</p>
+![sample-skill](doc/source/images/sample-skill.png)
 
-Click the option button (highlighted in the image above) to view all of your skill details and service credentials:
+Click the option button (highlighted in the image above) to view the skill `API Details`. Here you will find the `Skill ID` value.
 
 ![sample-skill-creds](doc/source/images/sample-skill-creds.png)
 

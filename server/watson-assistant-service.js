@@ -23,7 +23,8 @@ assistant = new AssistantV1({
   version: version
 });
 
-assistant.workspaceId = process.env.ASSISTANT_WORKSPACE_ID;
+// SDK uses workspaceID, but Assistant tooling refers to the this value as the SKILL ID.
+assistant.workspaceId = process.env.ASSISTANT_SKILL_ID;
 
 assistant.listWorkspaces = Promise.promisify(assistant.listWorkspaces);
 assistant.message = Promise.promisify(assistant.message);
