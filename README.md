@@ -315,7 +315,7 @@ ASSISTANT_IAM_APIKEY=<add_assistant_iam_apikey>
 
 Credentials can be found by clicking the Service Credentials tab, then the View Credentials option from the panel of your created Watson service.
 
-An additional `ASSISTANT_SKILL_ID` value is required to access the Watson Assistant service. To get this value, select the `Manage` tab, then the `Launch tool` button from the panel of your Watson Assistance service. From the service instance panel, select your Assistant to display the assigned skills. For this code pattern, we used the diaglog skill named `Custom Skill Sample Skill` that comes with the service:
+An additional `ASSISTANT_SKILL_ID` value is required to access the Watson Assistant service. To get this value, select the `Manage` tab, then the `Launch tool` button from the panel of your Watson Assistance service. From the service instance panel, select your Assistant to display the assigned skills. For this code pattern, we used the dialog skill named `Custom Skill Sample Skill` that comes with the service:
 
 ![sample-skill](doc/source/images/sample-skill.png)
 
