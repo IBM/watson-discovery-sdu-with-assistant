@@ -22,7 +22,7 @@ module.exports = {
   },
   message(messageOpts) {
     const params = Object.assign({
-      workspace_id: this.workspace_id
+      workspaceId: this.workspace_id
     }, messageOpts);
 
     console.log('Assistant Message Params: ');

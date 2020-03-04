@@ -20,7 +20,6 @@ require('dotenv').config({
   silent: true
 });
 
-const Promise = require('bluebird');
 const messageBuilder = require('./message-builder');
 const assistant = require('./watson-assistant-service');
 

@@ -1,11 +1,3 @@
-// function main(args) {
-//   console.log('Begin action');
-//   // console.log(args);
-//   //  return new Promise(function(resolve, reject) {
-//   return { text: 'Disco Action Called!' };
-// //  });
-// }
-
 /**
   *
   * @param {object} params
