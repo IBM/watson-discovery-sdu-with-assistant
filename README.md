@@ -309,7 +309,7 @@ Update the `.env` file with the credentials from your Assistant service.
 
 # Watson Assistant
 ASSIATANT_URL=<add_assistant_url>
-ASSISTANT_APIKEY=<add_assistant_iam_apikey>
+ASSISTANT_APIKEY=<add_assistant_apikey>
 ASSISTANT_SKILL_ID=<add_assistant_skill_id>
 
 # Run locally on a non-default port (default is 3000)
