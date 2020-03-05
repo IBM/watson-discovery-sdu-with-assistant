@@ -14,19 +14,41 @@
  * the License.
  */
 
-const Promise = require('bluebird');
 const AssistantV1 = require('ibm-watson/assistant/v1');
+const { getAuthenticatorFromEnvironment } = require('ibm-watson/auth');
 
-var assistant;
-const version = '2019-02-28';
-assistant = new AssistantV1({
-  version: version
+// need to manually set url and disableSslVerification to get around
+// current Cloud Pak for Data SDK issue IF user uses
+// `CONVERSATION_` prefix in run-time environment.
+let auth;
+let url;
+let disableSSL = false;
+
+try {
+  // ASSISTANT should be used
+  auth = getAuthenticatorFromEnvironment('ASSISTANT');
+  url = process.env.ASSISTANT_URL;
+  if (process.env.ASSISTANT_DISABLE_SSL == 'true') {
+    disableSSL = true;
+  }
+} catch (e) {
+  // but handle if alternate CONVERSATION is used
+  auth = getAuthenticatorFromEnvironment('CONVERSATION');
+  url = process.env.CONVERSATION_URL;
+  if (process.env.CONVERSATION_DISABLE_SSL == 'true') {
+    disableSSL = true;
+  }
+}
+console.log('Assistant auth:',JSON.stringify(auth, null, 2));
+
+const assistant = new AssistantV1({
+  version: '2019-02-28',
+  authenticator: auth,
+  url: url,
+  disableSslVerification: disableSSL
 });
 
 // SDK uses workspaceID, but Assistant tooling refers to the this value as the SKILL ID.
 assistant.workspaceId = process.env.ASSISTANT_SKILL_ID;
-
-assistant.listWorkspaces = Promise.promisify(assistant.listWorkspaces);
-assistant.message = Promise.promisify(assistant.message);
 
 module.exports = assistant;

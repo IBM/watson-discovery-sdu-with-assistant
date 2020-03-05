@@ -31,7 +31,7 @@ A webhook is a mechanism that allows you to call out to an external program base
 
 In our example, the webhook will communicate with an IBM Cloud Functions `web action`, which is connected to the Watson Discovery service.
 
-> Note: Using the Watson Assistant Search Skill is another option that could have been used here. Similar to using a webhook, a Search Skill can be configured to query a Watson Discovery collection. This feature, however, is still in beta testing and only available with IBM Cloud paid plans. For that reason, we have choosen to use webhooks at this time. Hopefully, this feature can be added to this code pattern in the future. Click [here](https://cloud.ibm.com/docs/services/assistant?topic=assistant-skill-search-add) for more information about the Watson Assistant Search Skill.
+> **Note**: Another method of integrating Watson Assistant with Watson Discovery is through the use of a new feature of Watson Assistant called a [search skill](https://cloud.ibm.com/docs/services/assistant?topic=assistant-skill-search-add). Click [here](https://github.com/IBM/watson-assistant-with-search-skill) to view a code pattern that showcases this feature.
 
 ## Flow
 
@@ -203,7 +203,7 @@ Next, go to the `Endpoints` panel [1]:
 
 Click the checkbox for `Enable as Web Action` [2]. This will generate a public endpoint URL [3].
 
-Take note of the REST API endpoint value [3], as this will be needed by Watson Assistant in a future step.
+Take note of the URL value [3], as this will be needed by Watson Assistant in a future step.
 
 To verify you have entered the correct Discovery parameters, execute the provied `curl` command [4]. If it fails, re-check your parameter values.
 
@@ -251,7 +251,9 @@ Select the `Options` tab [1]:
 
 ![assistant-define-webhook](doc/source/images/assistant-define-webhook.png)
 
-Enter the public URL endpoint for your action [2]. (Note that the URL should end with `.json`).
+Enter the public URL endpoint for your action [2].
+
+> **Important**: Add `.json` to the end of the URL to specify the result should be in JSON format.
 
 Return to the `Dialog` tab, and click on the `Ask about product` node. From the details panel for the node, click on `Customize`, and enable Webhooks for this node:
 
@@ -306,8 +308,9 @@ Update the `.env` file with the credentials from your Assistant service.
 # your own before starting the app.
 
 # Watson Assistant
+ASSIATANT_URL=<add_assistant_url>
+ASSISTANT_APIKEY=<add_assistant_iam_apikey>
 ASSISTANT_SKILL_ID=<add_assistant_skill_id>
-ASSISTANT_IAM_APIKEY=<add_assistant_iam_apikey>
 
 # Run locally on a non-default port (default is 3000)
 # PORT=3000

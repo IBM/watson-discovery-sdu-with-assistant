@@ -21,7 +21,6 @@ import Messages from './Messages';
 import { Grid, Card, Input } from 'semantic-ui-react';
 
 const utils = require('../lib/utils');
-const util = require('util');  
 
 var messageCounter = 1;
 
@@ -81,17 +80,21 @@ class Main extends React.Component {
       }
     })
       .then(json => {
-        console.log('+++ ASSISTANT RESULTS +++');
-        const util = require('util');
-        console.log(util.inspect(json, false, null));
+        const result = json.result.output.generic[0];
+        const context = json.result.context;
+
+        // un-comment to show results in browser console
+        // console.log('+++ ASSISTANT RESULTS +++');
+        // console.log(JSON.stringify(json, null, 2));
+        // console.log('CONTEXT: ' + JSON.stringify(context, null, 2));
 
         // returned text from assistant will either be a pre-canned 
         // dialog response, or Discovery data
-        if (json.context.webhook_result_1) {
-          console.log('GOT DISCO OUTPUT!');
-          var passages = json.context.webhook_result_1.passages;
+        if ('webhook_result_1' in context) {
+          console.log('Data from Discovery');
+          var passages = context.webhook_result_1.passages;
           passages = utils.formatData(passages);
-          
+
           // add a header to our message
           messageCounter += 1;
           conversation.push(
@@ -107,15 +110,15 @@ class Main extends React.Component {
                 text: result.text,
                 owner: 'watson-cont'});
           });
-
-        } else {
+        } else if (result.response_type === 'text') {
+          // normal dialog response from Assistant
           // add to message list
           messageCounter += 1;
-          conversation.push(
-            { id: messageCounter,
-              text: json.output.text[0],
-              owner: 'watson'
-            });
+          conversation.push({
+            id: messageCounter,
+            text: result.text,
+            owner: 'watson'
+          });
         }
 
         this.setState({
@@ -143,6 +146,7 @@ class Main extends React.Component {
     if (context.system) {
       if (context.system.dialog_stack) {
         console.log('Dialog Stack:');
+        const util = require('util');
         console.log(util.inspect(context, false, null));
       }
     }
