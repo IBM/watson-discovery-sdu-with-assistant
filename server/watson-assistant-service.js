@@ -42,7 +42,7 @@ try {
 console.log('Assistant auth:',JSON.stringify(auth, null, 2));
 
 const assistant = new AssistantV1({
-  version: '2019-02-28',
+  version: '2020-03-01',
   authenticator: auth,
   url: url,
   disableSslVerification: disableSSL
