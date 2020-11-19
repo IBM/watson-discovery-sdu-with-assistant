@@ -91,7 +91,8 @@ class Main extends React.Component {
         // returned text from assistant will either be a pre-canned 
         // dialog response, or Discovery data
         if ('webhook_result_1' in context) {
-          console.log('Data from Discovery');
+          console.log('Data from Discovery ---- ');
+          console.log(JSON.stringify(context, null, 2));
           var passages = context.webhook_result_1.passages;
           passages = utils.formatData(passages);
 

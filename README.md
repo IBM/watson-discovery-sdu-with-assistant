@@ -166,19 +166,19 @@ From the `Functions` main panel, click on the `Actions` tab. Then click on `Crea
 
 From the `Create` panel, select the `Create Action` option.
 
-On the `Create Action` panel, provide a unique `Action Name` [1], keep the default package [2], and select the `Node.js 10` [3] runtime. Click the `Create` button [4] to create the action.
+On the `Create Action` panel, provide a unique `Action Name`, keep the default package, and select the `Node.js 12` runtime. Click the `Create` button to create the action.
 
 ![action-create](doc/source/images/action-create.png)
 
-Once your action is created, click on the `Code` tab [1]:
+Once your action is created, click on the `Code` tab:
 
 ![action-code](doc/source/images/action-code.png)
 
-In the code editor window [2], cut and paste in the code from the `disco-action.js` file found in the `actions` directory of your local repo. The code is pretty straight-forward - it simply connects to the Discovery service, makes a query against the collection, then returns the response.
+In the code editor window, cut and paste in the code from the `disco-action.js` file found in the `actions` directory of your local repo. The code is pretty straight-forward - it simply connects to the Discovery service, makes a query against the collection, then returns the response.
 
-If you press the `Invoke` button [3], it will fail due to credentials not being defined yet. We'll do this next.
+If you press the `Invoke` button, it will fail due to credentials not being defined yet. We'll do this next.
 
-Select the `Parameters` tab [1]:
+Select the `Parameters` tab:
 
 ![action-params](doc/source/images/action-params.png)
 
@@ -197,25 +197,35 @@ Now that the credentials are set, return to the `Code` panel and press the `Invo
 
 ![action-code-invoke](doc/source/images/action-code-invoke.png)
 
-Next, go to the `Endpoints` panel [1]:
+Next, go to the `Endpoints` panel:
 
 ![action-endpoint](doc/source/images/action-endpoint.png)
 
-Click the checkbox for `Enable as Web Action` [2]. This will generate a public endpoint URL [3].
+Click the checkbox for `Enable as Web Action` [1]. This will generate a public endpoint URL [2].
 
-Take note of the URL value [3], as this will be needed by Watson Assistant in a future step.
+Take note of the URL value [2], as this will be needed by Watson Assistant in a future step.
 
 To verify you have entered the correct Discovery parameters, execute the provied `curl` command [4]. If it fails, re-check your parameter values.
 
-> NOTE: An IBM Cloud Functions service will not show up in your dashboard resource list. To return to your defined `Action`, you will need to access Cloud Functions by selecting `Create Resource` from the main dashboard panel (as shown at the beginning of this step).
+> **NOTE**: When copying the `curl` command, make sure you use the `copy` icon listed to the right of the command. It will ensure that your actual `API-KEY` will be substituted in your command. You can also click on the `eye` icon to view the command with the substituted key value. In this state, you can use normal keyboard actions to cut and paste the command to your terminal window.
+
+Once you exit the IBM Functions service page, please be aware that an IBM Functions service will not show up in your dashboard resource list. To return to your defined `Action`, you will need to access IBM Functions by selecting `Create Resource` from the main dashboard panel (as shown at the beginning of this step).
 
 ### 5. Configure Watson Assistant
 
-As shown below, launch the `Watson Assistant` tool and create a new dialog skill. Select the `Use sample skill` option as your starting point.
+Launch your Watson Assistant service, and create a new assistant.
 
-![upload_data_into_collection](doc/source/images/create-skill.gif)
+![assistant-create-assistant](doc/source/images/assistant-create-assistant.png)
 
-This dialog skill contains all of the nodes needed to have a typical call center conversation with a user.
+Once your assistant is created, create a dialog skill by clicking the `Add dialog skill` button. 
+
+![assistant-create-dialog-skill](doc/source/images/assistant-create-dialog-skill.png)
+
+On the `Add dialog skill` panel, click the `Use sample skill` menu option.
+
+![assistant-use-sample-skill](doc/source/images/assistant-use-sample-skill.png)
+
+Select the `Customer Care Sample Skill` as the starting point for our new dialog skill. This dialog skill contains all of the nodes needed to have a typical call center conversation with a user.
 
 #### Add new intent
 
@@ -233,11 +243,11 @@ Name the intent `#Product_Information`, and at a minimum, enter the following ex
 
 #### Create new dialog node
 
-Now we need to add a node to handle our intent. Click on the `Dialog` [1] tab, then click on the drop down menu for the `Small Talk` node [2], and select the `Add node below` [3] option.
+Now we need to add a node to handle our intent. Click on the `Dialog` tab, then click on the drop down menu for the bottom `anything_else` node [1], and select the `Add node above` [2] option.
 
 ![assistant-add-node](doc/source/images/assistant-add-node.png)
 
-Name the node "Ask about product" [1] and assign it our new intent [2].
+Name the node "Ask about product" [1] and assign it to our new intent [2].
 
 ![assistant-define-node](doc/source/images/assistant-define-node.png)
 
@@ -247,35 +257,37 @@ This means that if Watson Assistant recognizes a user input such as "how do I se
 
 Set up access to our WebHook for the IBM Cloud Functions action you created in Step #4.
 
-Select the `Options` tab [1]:
+Select the `Options` -> `Webhooks` tab:
 
 ![assistant-define-webhook](doc/source/images/assistant-define-webhook.png)
 
-Enter the public URL endpoint for your action [2].
+Enter the public URL endpoint for your IBM Functions action URL that you created in the previous section.
 
 > **Important**: Add `.json` to the end of the URL to specify the result should be in JSON format.
 
-Return to the `Dialog` tab, and click on the `Ask about product` node. From the details panel for the node, click on `Customize`, and enable Webhooks for this node:
+Return to the `Dialog` tab, and click on the `Ask about product` node. From the details panel for the node, click on the `Customize` button, and then enable `Call a webhook` for this node:
 
 ![assistant-enable-webhook-for-node](doc/source/images/assistant-enable-webhook-for-node.png)
 
 Click `Apply`.
 
-The dialog node should have a `Return variable` [1] set automatically to `$webhook_result_1`. This is the variable name you can use to access the result from the Discovery service query.
+Complete the node configuration as shown below.
 
 ![assistant-node-config-webhook](doc/source/images/assistant-node-config-webhook.png)
 
-You will also need to pass in the users question via the parameter `input` [2]. The key needs to be set to the value:
+`[1]` You will need to pass in the query from the customer. Set `Key` to `input`, and set the value to `<?input.text?>`, which will automatically be filled in by the dialog skill.
 
-```bash
-"<?input.text?>"
-```
+`[2]` The `Return variable` value is what is returned by the webhook. The value `webhook_result_1` should have automatically been filled in once the webhook for this node was enabled.
 
-If you fail to do this, Discovery will return results based on a blank query.
+`[3]` This is a confirmation that the webhook has been enabled and set.
 
-Optionally, you can add these responses to aid in debugging:
+The rest of the settings are used to process the results.
 
-![assistant-node-config-webhook-2](doc/source/images/assistant-node-config-webhook-2.png)
+`[4]` If the results are returned from the webhook, return them to the dialog skill.
+
+`[5]` If an error occurs, display the error in the dialog skill.
+
+`[6]` If a time-out occurs, display the message 'Try again later`.
 
 #### Test in Assistant Tooling
 
@@ -318,7 +330,9 @@ ASSISTANT_SKILL_ID=<add_assistant_skill_id>
 
 Credentials can be found by clicking the Service Credentials tab, then the View Credentials option from the panel of your created Watson service.
 
-An additional `ASSISTANT_SKILL_ID` value is required to access the Watson Assistant service. To get this value, select the `Manage` tab, then the `Launch tool` button from the panel of your Watson Assistance service. From the service instance panel, select your Assistant to display the assigned skills. For this code pattern, we used the dialog skill named `Custom Skill Sample Skill` that comes with the service:
+![assistnt-service-creds](doc/source/images/assistant-service-creds.png)
+
+An additional `ASSISTANT_SKILL_ID` value is required to access the Watson Assistant service. To get this value, select the `Skills` tab from your Watson Assistant main panel. From the list of created skills, select the one you created in the previous step (`LINKED ASSISTANTS` label should point back to the Assistant you created). Click the action menu and select the option `View API Details`.
 
 ![sample-skill](doc/source/images/sample-skill.png)
 
@@ -349,27 +363,56 @@ Sample questions:
 
 * This is the format for how Discovery results will be returned in the Assistant context object:
 
-```
-{ conversation_id: '70bc6532-d3fb-4e4c-9083-7a1c752ba6ef',
-  system: 
-   { initialized: true,
-     dialog_stack: [ { dialog_node: 'root' } ],
-     dialog_turn_counter: 3,
-     dialog_request_counter: 3,
-     _node_output_map:
-      { node_15_1488295465298: [ 0 ],
-        response_1_1559767826196: [ 0 ] },
-     branch_exited: true,
-     branch_exited_reason: 'completed' },
-  webhook_result_1:
-   { matching_results: 9,
-     passages:
-      [ { document_id: '3a5efee70d8cc9d70e2b94d22c15e2d1_2',
-          end_offset: 2791,
-          field: 'text',
-          passage_score: 6.752501692678998,
-          passage_text: 'Specify what the heat pump runs when the O/B Reversing Valve is engaged: On Cool runs cooling when O/B engages (most cases), or On Heat runs heating when O/B engages. 4. Touch Next. You will be returned to the Equipment configuration menu. Furnaces/Boilers If you have a furnace or boiler installed: 1. Select the heating menu. 2. Configure the heater type',
-          start_offset: 2435 },
+```json
+  "conversation_id": "4a1b9c1b-82c1-4284-b949-cef465cfead2",
+  "system": {
+    "initialized": true,
+    "dialog_stack": [
+      {
+        "dialog_node": "root"
+      }
+    ],
+    "dialog_turn_counter": 1,
+    "dialog_request_counter": 1,
+    "_node_output_map": {
+      "response_3_1605742182459": {
+        "0": [
+          0
+        ]
+      }
+    },
+    "last_branch_node": "node_5_1605741980476",
+    "branch_exited": true,
+    "branch_exited_reason": "completed"
+  },
+  "webhook_result_1": {
+    "matching_results": 14,
+    "passages": [
+      {
+        "document_id": "3a5efee70d8cc9d70e2b94d22c15e2d1_8",
+        "end_offset": 240,
+        "field": "text",
+        "passage_score": 8.243605127453607,
+        "passage_text": "If you have a furnace or boiler installed: 1. Select the heating menu. 2. Configure the heater type:  Furnace: Optimizes ecobee3 for systems using forced air  Boiler: Optimizes your ecobee3 for systems using radiators or in-floor heat. 3.",
+        "start_offset": 0
+      },
+      {
+        "document_id": "3a5efee70d8cc9d70e2b94d22c15e2d1_109",
+        "end_offset": 270,
+        "field": "text",
+        "passage_score": 6.265008630271935,
+        "passage_text": "This menu lets you test the wiring and connections of the devices connected to the thermostat by turning them on or off. The equipment will turn off when you exit the menu. Warning: Compressor protection and minimum run-time features are not enforced while in this mode.",
+        "start_offset": 0
+      },
+      {
+        "document_id": "3a5efee70d8cc9d70e2b94d22c15e2d1_121",
+        "end_offset": 998,
+        "field": "text",
+        "passage_score": 5.536546447244795,
+        "passage_text": "However, there is no guarantee that interference will not occur in a particular installation. If this equipment does cause harmful interference to radio or tele- vision reception, which can be determined by turning the equipment off and on, the user is encouraged to try to correct the interference by one",
+        "start_offset": 693
+      }
+    ],
 ```
 
 # Learn more
