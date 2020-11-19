@@ -166,7 +166,7 @@ From the `Functions` main panel, click on the `Actions` tab. Then click on `Crea
 
 From the `Create` panel, select the `Create Action` option.
 
-On the `Create Action` panel, provide a unique `Action Name`, keep the default package, and select the `Node.js 12` [3] runtime. Click the `Create` button to create the action.
+On the `Create Action` panel, provide a unique `Action Name`, keep the default package, and select the `Node.js 12` runtime. Click the `Create` button to create the action.
 
 ![action-create](doc/source/images/action-create.png)
 
@@ -209,7 +209,7 @@ To verify you have entered the correct Discovery parameters, execute the provied
 
 > **NOTE**: When copying the `curl` command, make sure you use the `copy` icon listed to the right of the command. It will ensure that your actual `API-KEY` will be substituted in your command. You can also click on the `eye` icon to view the command with the substituted key value. In this state, you can use normal keyboard actions to cut and paste the command to your terminal window.
 
-Once you exit the IBM Funcions service page, please be aware that an IBM Functions service will not show up in your dashboard resource list. To return to your defined `Action`, you will need to access IBM Functions by selecting `Create Resource` from the main dashboard panel (as shown at the beginning of this step).
+Once you exit the IBM Functions service page, please be aware that an IBM Functions service will not show up in your dashboard resource list. To return to your defined `Action`, you will need to access IBM Functions by selecting `Create Resource` from the main dashboard panel (as shown at the beginning of this step).
 
 ### 5. Configure Watson Assistant
 
@@ -363,7 +363,7 @@ Sample questions:
 
 * This is the format for how Discovery results will be returned in the Assistant context object:
 
-```
+```json
   "conversation_id": "4a1b9c1b-82c1-4284-b949-cef465cfead2",
   "system": {
     "initialized": true,
