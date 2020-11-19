@@ -39,10 +39,10 @@ try {
     disableSSL = true;
   }
 }
-console.log('Assistant auth:',JSON.stringify(auth, null, 2));
+console.log('Assistant auth: ',JSON.stringify(auth, null, 2));
 
 const assistant = new AssistantV1({
-  version: '2020-03-01',
+  version: '2020-11-16',
   authenticator: auth,
   url: url,
   disableSslVerification: disableSSL

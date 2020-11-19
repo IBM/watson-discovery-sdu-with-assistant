@@ -31,9 +31,9 @@ const WatsonAssistantService = new Promise((resolve, reject) => {
   // listEnvironments as sanity check to ensure creds are valid
   assistant.listWorkspaces({})
     .then(() => {
-      // environment and collection ids are always the same for Watson News
       const workspaceId = assistant.workspaceId;
       messageBuilder.setWorkspaceId(workspaceId);
+      // console.log('Workspaces: ' + JSON.stringify(res.result, null, 2));
       resolve(createServer());
     })
     .catch(error => {
@@ -63,6 +63,7 @@ function createServer() {
       if (err) {
         return res.status(err.code || 500).json(err);
       }
+      // console.log('response: ' + JSON.stringify(data, null, 2));
       return res.json(updateMessage(messagesParams, data));
     });
   });
